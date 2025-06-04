@@ -7,6 +7,8 @@ Il est écrit de façon à être exécuté cellule par cellule, par
 exemple dans Spyder en utilisant le bouton "Run Cell", ou CTRL+Enter
 (CMD+Enter sur Mac).
 
+Félix Chénier, 2025
+
 """
 
 import numpy as np
@@ -15,10 +17,7 @@ import matplotlib.pyplot as plt
 
 import kineticstoolkit.lab as ktk
 
-
-# ktk.load(ktk.doc.download("timeseries_example.ktk.zip"))
-
-# %% Créer un TimeSeries
+# %% Créer une TimeSeries
 
 # Créer la TimeSeries
 ts = ktk.TimeSeries()
