@@ -147,3 +147,96 @@ all_analyses
 df = pd.DataFrame(all_analyses)
 
 df.to_excel("wheelchair_analysis.xlsx")
+
+# %% AUTRE ANALYSE - PATRON CINÉMATIQUE MOYEN
+
+# Ici, on isole les cycles de propulsion les plus répétables, pour afficher
+# le cycle de propulsion moyen sur une courbe.
+
+# %% Normaliser les poussées de 0 à 100%
+
+ts_normalized = ktk.cycles.time_normalize(ts, "push", "recovery")
+
+ts_normalized.plot(["Forces", "Ftot", "Moments"])
+
+# %% Empiler les poussées dans un seul array
+
+stacked = ktk.cycles.stack(ts_normalized)
+
+stacked
+
+# %% Afficher les poussées une à une
+
+plt.figure()
+
+plt.subplot(1, 2, 1)
+plt.title("Ftot")
+
+for i_cycle in range(n_cycles):
+    plt.plot(stacked["Ftot"][i_cycle])
+
+plt.subplot(1, 2, 2)
+plt.title("Mz")
+
+for i_cycle in range(n_cycles):
+    plt.plot(stacked["Moments"][i_cycle, :, 2])
+
+
+# %% Déterminer les poussées les plus répétables
+
+repeatable_indexes = ktk.cycles.most_repeatable_cycles(stacked["Ftot"])
+
+repeatable_indexes
+
+# %% Afficher seulement les 20 poussées les plus répétables
+
+n_to_keep = 20
+
+plt.figure()
+
+plt.subplot(1, 2, 1)
+plt.title("Ftot")
+
+for i_cycle in repeatable_indexes[0:n_to_keep]:
+    plt.plot(stacked["Ftot"][i_cycle])
+
+plt.subplot(1, 2, 2)
+plt.title("Mz")
+
+for i_cycle in repeatable_indexes[0:n_to_keep]:
+    plt.plot(stacked["Moments"][i_cycle, :, 2])
+
+# %% Afficher un graphique de moyenne ± écart-type
+
+n_to_keep = 20
+
+Ftot = stacked["Ftot"][repeatable_indexes[0:n_to_keep]]
+Mz = stacked["Moments"][repeatable_indexes[0:n_to_keep], :, 2]
+
+
+plt.figure()
+
+plt.subplot(1, 2, 1)
+plt.title("Ftot")
+
+plt.fill_between(
+    np.arange(100),
+    Ftot.mean(axis=0) - Ftot.std(axis=0),
+    Ftot.mean(axis=0) + Ftot.std(axis=0),
+    alpha=0.2
+)
+plt.plot(Ftot.mean(axis=0),'r')
+
+
+plt.subplot(1, 2, 2)
+plt.title("Mz")
+
+plt.fill_between(
+    np.arange(100),
+    Mz.mean(axis=0) - Mz.std(axis=0),
+    Mz.mean(axis=0) + Mz.std(axis=0),
+    color='b',
+    alpha=0.2
+)
+plt.plot(Mz.mean(axis=0),'b')
+
