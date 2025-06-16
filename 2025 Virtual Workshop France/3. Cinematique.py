@@ -130,7 +130,7 @@ yz = points.data["LateralEpicondyleR"] - points.data["MedialEpicondyleR"]
 
 arm = ktk.geometry.create_transform_series(y=y, yz=yz, positions=origin)
 
-# %% Créer une TimeSeries pour les systèmes d'axe
+# %% Pour visualiser, créer une TimeSeries pour les systèmes d'axe
 
 transforms = ktk.TimeSeries(time=points.time)
 transforms = transforms.add_data("ArmR", arm)
