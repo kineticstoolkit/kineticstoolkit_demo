@@ -120,7 +120,7 @@ for i_cycle in range(n_cycles):
     )
 
     this_analysis["Mean Speed (deg/s)"] = np.mean(
-        np.rad2deg(ts_push.data["Velocity"])
+        np.rad2deg(ts_cycle.data["Velocity"])
     )
 
     # Analyse cinétique
